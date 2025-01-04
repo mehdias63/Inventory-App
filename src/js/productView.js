@@ -1,12 +1,14 @@
 import Storage from './storage.js'
 
 const addNewProductBtn = document.getElementById('add-new-product')
+const searchInput = document.querySelector('#search-input')
 
 class ProductView {
 	constructor() {
 		addNewProductBtn.addEventListener('click', e =>
 			this.addNewProduct(e),
 		)
+		searchInput.addEventListener('input', e => this.searchProducts(e))
 		this.products = []
 	}
 	setApp() {
@@ -20,17 +22,17 @@ class ProductView {
 		if (!title || !quantity || !category) return
 		Storage.saveProducts({ title, quantity, category })
 		this.products = Storage.getAllProducts()
-		this.createProductsList()
+		this.createProductsList(this.products)
 	}
 	createProductsList(products) {
 		let result = ''
-		this.products.forEach(item => {
+		products.forEach(item => {
 			const selectedCategory = Storage.getAllCategories().find(
 				c => c.id == item.category,
 			)
 			result += `<div class="flex items-center justify-between mb-2 w-full min-w-[400px]">
     <span class="text-slate-400">${item.title}</span>
-    <div class="flex items-center gap-x-3">
+    <div class="flex items-center gap-x-4">
       <span class="text-slate-400">${new Date().toLocaleDateString(
 				'fa-IR',
 			)}</span> 
@@ -48,6 +50,14 @@ class ProductView {
 		})
 		const productsDOM = document.getElementById('products-list')
 		productsDOM.innerHTML = result
+	}
+	searchProducts(e) {
+		const value = e.target.value.trim().toLowerCase()
+		const filteredProducts = this.products.filter(p =>
+			p.title.toLowerCase().includes(value),
+		)
+		console.log(this.products)
+		this.createProductsList(filteredProducts)
 	}
 }
 export default new ProductView()
