@@ -2,6 +2,7 @@ import Storage from './storage.js'
 
 const addNewProductBtn = document.getElementById('add-new-product')
 const searchInput = document.querySelector('#search-input')
+const selectedSort = document.querySelector('#sort-products')
 
 class ProductView {
 	constructor() {
@@ -9,6 +10,7 @@ class ProductView {
 			this.addNewProduct(e),
 		)
 		searchInput.addEventListener('input', e => this.searchProducts(e))
+		selectedSort.addEventListener('change', e => this.sortProducts(e))
 		this.products = []
 	}
 	setApp() {
@@ -58,6 +60,11 @@ class ProductView {
 		)
 		console.log(this.products)
 		this.createProductsList(filteredProducts)
+	}
+	sortProducts(e) {
+		const value = e.target.value
+		this.products = Storage.getAllProducts(value)
+		this.createProductsList(this.products)
 	}
 }
 export default new ProductView()

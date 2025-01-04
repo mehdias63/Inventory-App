@@ -59,11 +59,15 @@ export default class Storage {
 		}
 		localStorage.setItem('category', JSON.stringify(saveCategories))
 	}
-	static getAllProducts() {
+	static getAllProducts(sort = 'newest') {
 		const savedProducts =
 			JSON.parse(localStorage.getItem('products')) || []
 		const sortedProducts = savedProducts.sort((a, b) => {
-			return new Date(a.createdAt) > new Date(b.createdAt) ? -1 : 1
+			if (sort === 'newest') {
+				return new Date(a.createdAt) > new Date(b.createdAt) ? -1 : 1
+			} else if (sort === 'oldest') {
+				return new Date(a.createdAt) > new Date(b.createdAt) ? 1 : -1
+			}
 		})
 		return sortedProducts
 	}
