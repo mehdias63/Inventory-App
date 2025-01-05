@@ -52,6 +52,12 @@ class ProductView {
 		})
 		const productsDOM = document.getElementById('products-list')
 		productsDOM.innerHTML = result
+		const deleteBtns = [
+			...document.querySelectorAll('.delete-product'),
+		]
+		deleteBtns.forEach(item => {
+			item.addEventListener('click', e => this.deleteProduct(e))
+		})
 	}
 	searchProducts(e) {
 		const value = e.target.value.trim().toLowerCase()
@@ -64,6 +70,12 @@ class ProductView {
 	sortProducts(e) {
 		const value = e.target.value
 		this.products = Storage.getAllProducts(value)
+		this.createProductsList(this.products)
+	}
+	deleteProduct(e) {
+		const productId = e.target.dataset.productId
+		Storage.deleteProduct(productId)
+		this.products = Storage.getAllProducts()
 		this.createProductsList(this.products)
 	}
 }
